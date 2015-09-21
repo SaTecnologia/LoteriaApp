@@ -1,0 +1,7 @@
+extends layout
+
+block content
+	p
+		ul
+			for user in users
+				li #{user.email}, #{user.password} 

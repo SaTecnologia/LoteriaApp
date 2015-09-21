@@ -1,0 +1,27 @@
+doctype html
+html
+	head
+		title= title
+		link(rel='stylesheet', href='/stylesheets/style.css')
+
+		script(type="application/javascript", src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js")
+		script(type="application/javascript", src="https://code.angularjs.org/1.4.6/angular-route.min.js")
+		script(type="application/javascript", src="javascripts/app.js")
+	
+	body(ng-app="loteria")
+
+		ul
+			li
+				a(href="/user/cadastrar") Cadastrar user
+		p
+			form(ng-controller="UserCtrl", id="busca", method="POST", action="/user/find")
+				input(type="text", ng-model="email", placeholder="email", name="email")
+				button(type="submit", ) buscar
+				p Você esta buscando por: {{email}}
+
+				a(ng-click="buscaUser()") Buscar Users.
+				
+				ul
+					li(ng-repeat="user in users") {{user.email}}
+
+		block content

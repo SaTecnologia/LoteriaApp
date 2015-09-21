@@ -1,0 +1,8 @@
+extends ../layout
+
+block content
+	form(id="cad", method="POST", action="/users")
+		input(type="text", placeholder="email", name="email")
+		input(type="text", placeholder="password", name="password")
+
+		button(type="submit" ) Cadastrar
