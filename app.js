@@ -61,7 +61,10 @@ app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-passport.use(new passportLocal.Strategy(verificaLogin));
+passport.use(new passportLocal.Strategy({
+    usernameField: 'email',
+    passwordField: 'password',
+},verificaLogin));
 
 passport.use(new passportHttp.BasicStrategy(verificaLogin));
 
