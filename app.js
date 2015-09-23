@@ -11,8 +11,8 @@ var     express         = require('express')
     ,   passportLocal   = require('passport-local')
     ,   passportHttp    = require('passport-http');
 
-mongoose.connect('mongodb://localhost/loteria', function(err){
-// mongoose.connect('mongodb://bulaapi:bulaapi@ds031982.mongolab.com:31982/bula', function(err){
+//mongoose.connect('mongodb://localhost/loteria', function(err){
+ mongoose.connect('mongodb://betplay:betplay@ds051953.mongolab.com:51953/betplay', function(err){
     if( err ) {
         console.log("Error conectar mongo db: " + err);
     } else {
