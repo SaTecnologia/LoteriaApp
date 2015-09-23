@@ -3,8 +3,13 @@ module.exports = function(app){
 	var Loteria = app.models.loteria;
 	var Aposta = app.models.aposta;
 
-
 	var LoteriaController = {
+		loteriaAtiva: function(req,res){
+			Loteria.findOne({status: true},{_id:1}, function(err, loteria){
+				res.json(loteria);
+			});
+		},
+
 		gerarPrimeira: function(req,res){
 			Loteria.findOne({status: true}, function(err, loteria){
 				if(err) {
@@ -31,21 +36,22 @@ module.exports = function(app){
 					}
 				}
 			});
-
+		},
+		listar: function(req,res){
+			if(req.user.admin){
+				Loteria.find(function(err, loterias){
+					if(err) {
+						res.json(err);
+					} else {
+						res.json(loterias)
+					}
+				});
+			} else {
+				res.status(401).end();
+			}
 			
 
 		},
-		listar: function(req,res){
-			Loteria.find(function(err, loterias){
-				if(err) {
-					res.json(err);
-				} else {
-					res.json(loterias)
-				}
-			});
-
-		},
-		
 		gerarNumero: function(req,res){
 			Loteria.findOne({status: true}, function(err, loteria){
 				loteria.status = false;
@@ -88,7 +94,7 @@ module.exports = function(app){
 							numero3: numeros.numero3,
 							numero4: numeros.numero4,
 							user: 	req.user._id,
-							lotria: loteria._id					
+							loteria: loteria._id				
 						}
 					).save(function(err, aposta){
 
@@ -127,7 +133,7 @@ module.exports = function(app){
 
 
 						} else {
-							res.json({teste:"tente outra vez.."})		
+							res.json(false)		
 						}
 					});
 

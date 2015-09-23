@@ -15,17 +15,17 @@ module.exports = function(app){
 
 
 	
-	app.get('/api/users', autenticar.loginApi, users.listAPI);
+	app.get('/api/users', passport.authenticate('basic', { session: false }), users.listAPI);
 	//app.get('/api/user/:id', autenticar.loginApi, users.listUserAPI);
 
-	app.get('/api/user/me', autenticar.loginApi, users.user);
+	app.get('/api/user/me', passport.authenticate('basic', { session: false }), users.user);
 
-	app.post('/api/users', users.addAPI);
+	app.post('/api/users',users.addAPI);
 	app.get('/api/loginfail', function(req, res){
 		res.status(403).json({login: false});
 	});
 
-	app.post('/api/login', passport.authenticate('local', { failureRedirect: '/api/loginfail'}), users.user);
+	app.post('/api/login', passport.authenticate('basic', { session: false }), users.user);
 	app.get('/api/logout', function(req,res){
 		req.logout();
 	    res.json({logout: true});

@@ -9,9 +9,7 @@ var     express         = require('express')
     ,   expressSession  = require('express-session')
     ,   passport        = require('passport')
     ,   passportLocal   = require('passport-local')
-    ,   passportHttp    = require('passport-http')
-    ,   flash           = require('express-flash');
-
+    ,   passportHttp    = require('passport-http');
 
 mongoose.connect('mongodb://localhost/loteria', function(err){
 // mongoose.connect('mongodb://bulaapi:bulaapi@ds031982.mongolab.com:31982/bula', function(err){
@@ -55,7 +53,6 @@ app.use(expressSession({
                     )
         );
 
-app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -80,11 +77,9 @@ function verificaLogin(username, password, done){
                 if(result.email == username && pass.validate(result.password, password)) {
                     done(null, result);
                 } else {
-                    req.flash('info', 'Erro:' + err);
                     done(null, null);
                 }
             } else {
-                req.flash('info', 'Erro:' + err);
                 done(null, null);
             }
         }
