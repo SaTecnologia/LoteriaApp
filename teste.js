@@ -17,10 +17,6 @@ var num4;
 // var num5;
 // var num6;
 
-
-
-
-
 var i = 0;
 while(continuar){
 	num1 = Math.floor(Math.random() * 60);

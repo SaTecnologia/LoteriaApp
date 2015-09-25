@@ -2,8 +2,19 @@
 var debug = require('debug')('loteria');
 var app = require('../app');
 
+var http = require('http').Server(app);  
+var io = require('socket.io')(http);
+
+
 app.set('port', process.env.PORT || 3000);
 
-var server = app.listen(app.get('port'), function() {
+var server = http.listen(app.get('port'), function() {
   debug('Express server listening on port ' + server.address().port);
+});
+
+
+
+
+io.on('connection', function(socket){  
+  console.log('um usuario conectou');
 });

@@ -10,8 +10,7 @@ module.exports = function(app){
 
 	app.get('/api/loteria/gerarprimeira', loteria.gerarPrimeira);
 	app.get('/api/loteria/gerarnumero', loteria.gerarNumero);
-	app.get('/api/loterias',  passport.authenticate('basic', { session: false }), loteria.listar);
-
+	app.get('/api/loterias', passport.authenticate('basic', { session: false }), loteria.listar);
 
 
 	app.get('/api/apostas',  passport.authenticate('basic', { session: false }), loteria.apostas);

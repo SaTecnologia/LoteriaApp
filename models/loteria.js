@@ -6,12 +6,17 @@ module.exports = function(app){
 	
 	var loteria = new Schema(
 		{
-			numero1: 	{ type: String },
-			numero2: 	{ type: String },
-			numero3: 	{ type: String },
-			numero4: 	{ type: String },
-			status: 	{ type: Boolean},
+
+			titulo: 	{ type: String , default: "" },
+			descricao: 	{ type: String , default: "" },
+			imagem: 	{ type: String , default: "" },
+			numero1: 	{ type: Number },
+			numero2: 	{ type: Number },
+			numero3: 	{ type: Number },
+			numero4: 	{ type: Number },
+			status: 	{ type: Boolean, default: false },
 			user: 		{ type: ObjectId, ref: 'User', default: null },
+			validade: 	{ type: Date, default: Date.now },
 			created_at: { type: Date, default: Date.now },		
 			updated_at: { type: Date, default: Date.now }
 		}

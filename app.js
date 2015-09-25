@@ -9,10 +9,14 @@ var     express         = require('express')
     ,   expressSession  = require('express-session')
     ,   passport        = require('passport')
     ,   passportLocal   = require('passport-local')
-    ,   passportHttp    = require('passport-http');
+    ,   passportHttp    = require('passport-http')
+    ,   load            = require('express-load')
+    ,   app             = express()
+    ,   http            = require('http').Server(app)
+    ,   io              = require('socket.io')(http);
 
-//mongoose.connect('mongodb://localhost/loteria', function(err){
- mongoose.connect('mongodb://betplay:betplay@ds051953.mongolab.com:51953/betplay', function(err){
+mongoose.connect('mongodb://localhost/loteria', function(err){
+ //mongoose.connect('mongodb://betplay:betplay@ds051953.mongolab.com:51953/betplay', function(err){
     if( err ) {
         console.log("Error conectar mongo db: " + err);
     } else {
@@ -26,18 +30,10 @@ db.once('open', function() {
     console.log('Conexao realizada!');
 });
 
-
-
-var load = require('express-load');
-
-var app = express();
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
 app.use(cors());
-
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -68,8 +64,6 @@ passport.use(new passportHttp.BasicStrategy(verificaLogin));
 function verificaLogin(username, password, done){
     var pass = require('./middleware/password');
     var User = app.models.user;
-
-
     User.findOne({ 'email': username }, function (err, result) {
         if(err) { console.log("ERROR: " + err); }
         else {
@@ -86,8 +80,6 @@ function verificaLogin(username, password, done){
     });
 }
 
-
-
 passport.serializeUser(function(user, done){
     done(null, user);
 });
@@ -96,13 +88,10 @@ passport.deserializeUser(function(user, done){
     done(null, user);
 });
 
-
-
 load('models')
     .then('controllers')
     .then('routes')
     .into(app);
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
@@ -135,4 +124,14 @@ app.use(function(err, req, res, next) {
 });
 
 
-module.exports = app;
+app.set('port', process.env.PORT || 3000);
+
+var server = http.listen(app.get('port'), function() {
+  console.log('Express server listening on port ' + server.address().port);
+});
+
+io.on('connection', function(socket){  
+  console.log('um usuario conectou');
+});
+
+//module.exports = app;
