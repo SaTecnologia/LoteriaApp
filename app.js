@@ -130,8 +130,23 @@ var server = http.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + server.address().port);
 });
 
-io.on('connection', function(socket){  
-  console.log('um usuario conectou');
+var users = 0;
+io.on('connection', function(socket){
+    users++;
+
+    socket.on('disconnect', function(){
+        users--;
+        conexoes();
+    });
+
+
+    conexoes();
+  
+
+  function conexoes(){
+    console.log(users);
+    io.sockets.emit('usuariosConectados', users);
+  }
 });
 
 //module.exports = app;
