@@ -2,6 +2,7 @@ module.exports = function(app){
 
 	var Loteria = app.models.loteria;
 	var Aposta = app.models.aposta;
+	var mongoose = require('mongoose');
 
 
 	var respostas = {
@@ -107,32 +108,46 @@ module.exports = function(app){
 				user: 	req.user._id,
 				loteria: req.body.loteria	
 			};
-
+			
 			var query = {
-				_id: req.body.loteria,
-				numero1: req.body.numero1,
-				numero2: req.body.numero2,
-				numero3: req.body.numero3,
-				numero4: req.body.numero4,
+				_id: mongoose.Types.ObjectId(req.body.loteria),
+				numero1: parseInt(req.body.numero1),
+				numero2: parseInt(req.body.numero2),
+				numero3: parseInt(req.body.numero3),
+				numero4: parseInt(req.body.numero4),
 				status: true
 			};
 
+			
 			new Aposta(numeros)
 				.save(function(err, aposta){
 					if(err) {
+						console.log(err);
 						res.json(err);
 					} else {
-						Loteria.findOne(query, function(err, loteria){
+						Loteria.findOne({
+				_id: mongoose.Types.ObjectId(req.body.loteria),
+				numero1: parseInt(req.body.numero1),
+				numero2: parseInt(req.body.numero2),
+				numero3: parseInt(req.body.numero3),
+				numero4: parseInt(req.body.numero4),
+				status: true
+			}, function(err, loteria){
 							if(err){
+								console.log(err);
 								res.json(err);
 							} else {
 								if(loteria){
+									loteria.status = false;
+									loteria.save();
+
 									var numero = Math.floor(Math.random() * respostas.acertos.length);
 									
 									var result = {
 										acerto: true,
 										msg: respostas.acertos[numero]
 									}
+									console.log('if loteria Result: ', result);
 									res.json(result);
 
 								} else {
@@ -142,6 +157,7 @@ module.exports = function(app){
 										acerto: false,
 										msg: respostas.erros[numero]
 									}
+									console.log('else loteria Result: ', result);
 									res.json(result);
 								}
 							}

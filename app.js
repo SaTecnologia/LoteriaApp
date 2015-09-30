@@ -15,8 +15,8 @@ var     express         = require('express')
     ,   http            = require('http').Server(app)
     ,   io              = require('socket.io')(http);
 
-//mongoose.connect('mongodb://localhost/loteria', function(err){
- mongoose.connect('mongodb://betplay:betplay@ds051953.mongolab.com:51953/betplay', function(err){
+mongoose.connect('mongodb://localhost/loteria', function(err){
+// mongoose.connect('mongodb://betplay:betplay@ds051953.mongolab.com:51953/betplay', function(err){
     if( err ) {
         console.log("Error conectar mongo db: " + err);
     } else {
@@ -92,6 +92,7 @@ load('models')
     .then('controllers')
     .then('routes')
     .into(app);
+    
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
@@ -144,7 +145,7 @@ io.on('connection', function(socket){
   
 
   function conexoes(){
-    console.log(users);
+    console.log("Users conectado: ",users);
     io.sockets.emit('usuariosConectados', users);
   }
 });
