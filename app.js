@@ -15,8 +15,8 @@ var     express         = require('express')
     ,   http            = require('http').Server(app)
     ,   io              = require('socket.io')(http);
 
-mongoose.connect('mongodb://localhost/loteria', function(err){
-// mongoose.connect('mongodb://betplay:betplay@ds051953.mongolab.com:51953/betplay', function(err){
+//mongoose.connect('mongodb://localhost/loteria', function(err){
+ mongoose.connect('mongodb://betplay:betplay@ds051953.mongolab.com:51953/betplay', function(err){
     if( err ) {
         console.log("Error conectar mongo db: " + err);
     } else {
