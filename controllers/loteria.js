@@ -188,7 +188,7 @@ module.exports = function(app){
 		},
 		apostasUser: function(req,res){
 			Aposta
-				.find()
+				.find({user: req.params.id})
 				.populate({
 					path: 'user',
 					match: { _id: req.params.id},
