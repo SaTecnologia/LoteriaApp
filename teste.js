@@ -3,8 +3,8 @@ var numeros = {
 	numero2: Math.floor(Math.random() * 61),
 	numero3: Math.floor(Math.random() * 61),
 	numero4: Math.floor(Math.random() * 61),
-	 numero5: Math.floor(Math.random() * 61),
-	 numero6: Math.floor(Math.random() * 61)
+	numero5: Math.floor(Math.random() * 61),
+	numero6: Math.floor(Math.random() * 61)
 };
 
 
@@ -18,6 +18,8 @@ var num5;
 var num6;
 
 var i = 0;
+
+console.time('loteria');
 while(continuar){
 	num1 = Math.floor(Math.random() * 61);
 	num2 = Math.floor(Math.random() * 61);
@@ -52,5 +54,8 @@ while(continuar){
 		i++;
 	}
 }
+
+
+console.timeEnd('loteria');
 
 

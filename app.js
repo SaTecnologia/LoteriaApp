@@ -1,3 +1,4 @@
+require('newrelic');
 var     express         = require('express')
     ,   path            = require('path')
     ,   favicon         = require('serve-favicon')
@@ -15,8 +16,10 @@ var     express         = require('express')
     ,   http            = require('http').Server(app)
     ,   io              = require('socket.io')(http);
 
-//mongoose.connect('mongodb://localhost/loteria', function(err){
- mongoose.connect('mongodb://betplay:betplay@ds051953.mongolab.com:51953/betplay', function(err){
+    //699b8b768ebe5ecad3f9b75c91c065eff055b2d8
+
+mongoose.connect('mongodb://localhost/loteria', function(err){
+ //mongoose.connect('mongodb://betplay:betplay@ds051953.mongolab.com:51953/betplay', function(err){
     if( err ) {
         console.log("Error conectar mongo db: " + err);
     } else {
@@ -149,5 +152,8 @@ io.on('connection', function(socket){
     io.sockets.emit('usuariosConectados', users);
   }
 });
-
+process.on('exit', function() { 
+    console.log('saindo...');
+    process.exit(1); 
+});
 //module.exports = app;

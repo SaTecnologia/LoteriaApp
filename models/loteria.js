@@ -15,6 +15,7 @@ module.exports = function(app){
 			numero3: 	{ type: String },
 			numero4: 	{ type: String },
 			status: 	{ type: Boolean },
+			solicitado:	{ type: Boolean, default: false },
 			user: 		{ type: ObjectId, ref: 'User', default: null },
 			validade: 	{ type: Date, default: Date.now },
 			created_at: { type: Date, default: Date.now },		

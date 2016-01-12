@@ -15,6 +15,7 @@ module.exports = function(app){
 
 	app.get('/api/apostas',  passport.authenticate('basic', { session: false }), loteria.apostas);
 	app.get('/api/apostas/:id',  passport.authenticate('basic', { session: false }), loteria.apostasUser);
+	app.get('/api/apostas/:id/vitorias',  passport.authenticate('basic', { session: false }), loteria.apostasVitoria);
 
 	app.post('/api/apostar',  passport.authenticate('basic', { session: false }), loteria.apostar);
 

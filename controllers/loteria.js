@@ -100,6 +100,8 @@ module.exports = function(app){
 			});
 		},
 		apostar: function(req, res){
+			var totalApostasUser;
+			var totalApostas;
 			var numeros = {
 				numero1: req.body.numero1,
 				numero2: req.body.numero2,
@@ -117,7 +119,6 @@ module.exports = function(app){
 				numero4: parseInt(req.body.numero4),
 				status: true
 			};
-
 			
 			new Aposta(numeros)
 				.save(function(err, aposta){
@@ -126,48 +127,67 @@ module.exports = function(app){
 						res.json(err);
 					} else {
 						Loteria.findOne({
-				_id: mongoose.Types.ObjectId(req.body.loteria),
-				numero1: parseInt(req.body.numero1),
-				numero2: parseInt(req.body.numero2),
-				numero3: parseInt(req.body.numero3),
-				numero4: parseInt(req.body.numero4),
-				status: true
-			}, function(err, loteria){
+							_id: mongoose.Types.ObjectId(req.body.loteria),
+							numero1: parseInt(req.body.numero1),
+							numero2: parseInt(req.body.numero2),
+							numero3: parseInt(req.body.numero3),
+							numero4: parseInt(req.body.numero4),
+							status: true
+						}, function(err, loteria){
 							if(err){
 								console.log(err);
 								res.json(err);
 							} else {
-								if(loteria){
-									loteria.status = false;
-									loteria.save();
+								Aposta.count({ user: numeros.user }, function(err, result){
+									if(err){
+										console.log(err);
+										res.json(err);
+									} else {
+										totalApostasUser = result;
 
-									var numero = Math.floor(Math.random() * respostas.acertos.length);
-									
-									var result = {
-										acerto: true,
-										msg: respostas.acertos[numero]
-									}
-									console.log('if loteria Result: ', result);
-									res.json(result);
+										Aposta.count({ loteria: req.body.loteria }, function(err, result){
+											if(err){
+												console.log(err);
+												res.json(err);
+											} else {
+												totalApostas = result;
 
-								} else {
-									var numero = Math.floor(Math.random() * respostas.erros.length);
-		
-									var result = {
-										acerto: false,
-										msg: respostas.erros[numero]
+												if(loteria){
+													loteria.status = false;
+													loteria.save();
+
+													var numero = Math.floor(Math.random() * respostas.acertos.length);
+													
+													var result = {
+														acerto: true,
+														totalApostas: totalApostas,
+														totalApostasUser: totalApostasUser,
+														msg: respostas.acertos[numero]
+													}
+													res.json(result);
+
+												} else {
+													var numero = Math.floor(Math.random() * respostas.erros.length);
+						
+													var result = {
+														acerto: false,
+														totalApostas: totalApostas,
+														totalApostasUser: totalApostasUser,
+														msg: respostas.erros[numero]
+													}
+													res.json(result);
+												}
+											}
+										});
 									}
-									console.log('else loteria Result: ', result);
-									res.json(result);
-								}
+								});
+								
+
+								
 							}
 						});
 					}
 			});
-
-
-			
-
 		}, 
 		apostas: function(req,res){
 			Aposta
@@ -176,7 +196,10 @@ module.exports = function(app){
 					path: 'user',
 					select: 'email admin'
 				})
-				.populate('loteria')
+				.populate({
+					path: 'loteria',
+					select: 'titulo status validade created_at'
+				})
 				.exec(function (err, apostas) {
 				  if (err) {
 				  	console.log(err);
@@ -192,9 +215,12 @@ module.exports = function(app){
 				.populate({
 					path: 'user',
 					match: { _id: req.params.id},
-					 select: 'email',
+					 select: 'email'
 				})
-				.populate('loteria')
+				.populate({
+					path: 'loteria',
+					select: 'titulo status validade created_at'
+				})
 				.exec(function (err, apostas) {
 				  if (err) {
 				  	console.log(err);
@@ -203,7 +229,20 @@ module.exports = function(app){
 				  	res.json(apostas);
 				  }
 				});
+		},
+		apostasVitoria: function(req,res){
+			Loteria
+				.find({user: req.params.id})
+				.exec(function (err, loteria) {
+				  if (err) {
+				  	console.log(err);
+				  	res.json(err);
+				  } else {
+				  	res.json(loteria);
+				  }
+				});
 		}
+
 	};
 	return LoteriaController;
 }
